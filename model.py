@@ -7,9 +7,10 @@ class Attention(nn.Module):
         self.attn = nn.Linear(hidden_dim, 1)
 
     def forward(self, encoder_outputs):
-        scores = self.attn(encoder_outputs)  # (batch, seq_len, 1)
-        weights = torch.softmax(scores, dim=1)  # attention weights
-        context = torch.sum(weights * encoder_outputs, dim=1)  # weighted context
+        # encoder_outputs: (batch, seq_len, hidden_dim)
+        scores = self.attn(encoder_outputs)
+        weights = torch.softmax(scores, dim=1)
+        context = torch.sum(weights * encoder_outputs, dim=1)
         return context, weights
 
 class ProbLSTMAttention(nn.Module):
@@ -23,7 +24,7 @@ class ProbLSTMAttention(nn.Module):
         self.n_quantiles = n_quantiles
 
     def forward(self, x):
-        lstm_out, _ = self.lstm(x)  # (batch, seq_len, hidden_dim)
+        lstm_out, _ = self.lstm(x)
         context, attn_weights = self.attention(lstm_out)
         out = self.fc(context)
         out = out.view(-1, self.output_len, self.n_features, self.n_quantiles)
