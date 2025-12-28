@@ -4,7 +4,6 @@ import torch
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
-
 from model import ProbLSTMAttention
 
 # -----------------------------
@@ -15,9 +14,9 @@ t = np.linspace(0, 100, 1000)
 data = []
 
 for i in range(10):
-    seasonal = np.sin(0.02 * t + i)
-    trend = 0.001 * t
-    noise = 0.2 * np.random.randn(len(t))
+    seasonal = np.sin(0.02*t + i)
+    trend = 0.001*t
+    noise = 0.2*np.random.randn(len(t))
     data.append(seasonal + trend + noise)
 
 df = pd.DataFrame(np.array(data).T, columns=[f"series_{i}" for i in range(10)])
@@ -85,7 +84,7 @@ for epoch in range(EPOCHS):
     print(f"Epoch {epoch+1}/{EPOCHS}, Loss: {epoch_loss/len(loader):.4f}")
 
 # -----------------------------
-# 7. Evaluation
+# 7. Evaluation (CRPS)
 # -----------------------------
 model.eval()
 with torch.no_grad():
