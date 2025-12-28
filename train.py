@@ -1,58 +1,110 @@
-import torch
-import torch.nn as nn
 import numpy as np
 import pandas as pd
-from model import LSTMAttentionModel
+import torch
+from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.pyplot as plt
 
-# Simulated time series data
-np.random.seed(0)
-data = np.sin(np.linspace(0, 100, 500)) + 0.1 * np.random.randn(500)
+from model import ProbLSTMAttention
+
+# -----------------------------
+# 1. Generate 10 Related Series
+# -----------------------------
+np.random.seed(42)
+t = np.linspace(0, 100, 1000)
+data = []
+
+for i in range(10):
+    seasonal = np.sin(0.02 * t + i)
+    trend = 0.001 * t
+    noise = 0.2 * np.random.randn(len(t))
+    data.append(seasonal + trend + noise)
+
+df = pd.DataFrame(np.array(data).T, columns=[f"series_{i}" for i in range(10)])
+
+# -----------------------------
+# 2. Scale Data
+# -----------------------------
 scaler = MinMaxScaler()
-data_scaled = scaler.fit_transform(data.reshape(-1,1))
+scaled = scaler.fit_transform(df.values)
 
-# Prepare sequences
-def create_sequences(data, seq_length):
-    xs, ys = [], []
-    for i in range(len(data)-seq_length):
-        x = data[i:(i+seq_length)]
-        y = data[i+seq_length]
-        xs.append(x)
-        ys.append(y)
-    return np.array(xs), np.array(ys)
+# -----------------------------
+# 3. Create sequences
+# -----------------------------
+SEQ_LEN = 30
+X, Y = [], []
 
-SEQ_LEN = 20
-X, y = create_sequences(data_scaled, SEQ_LEN)
+for i in range(len(scaled) - SEQ_LEN):
+    X.append(scaled[i:i+SEQ_LEN])
+    Y.append(scaled[i+SEQ_LEN])
 
-# Convert to torch tensors
+X = np.array(X)
+Y = np.array(Y)
+
 X_tensor = torch.FloatTensor(X)
-y_tensor = torch.FloatTensor(y)
+Y_tensor = torch.FloatTensor(Y)
 
-# Reshape for LSTM (batch, seq_len, features)
-X_tensor = X_tensor.view(-1, SEQ_LEN, 1)
-y_tensor = y_tensor.view(-1, 1)
+dataset = TensorDataset(X_tensor, Y_tensor)
+loader = DataLoader(dataset, batch_size=64, shuffle=True)
 
-# Model
-model = LSTMAttentionModel(n_features=1, hidden_dim=32, output_len=1)
-criterion = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+# -----------------------------
+# 4. Model Setup
+# -----------------------------
+n_features = df.shape[1]
+hidden_dim = 64
+output_len = 1
+quantiles = [0.1, 0.5, 0.9]
 
-# Training loop
+model = ProbLSTMAttention(n_features, hidden_dim, output_len, n_quantiles=len(quantiles))
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+# -----------------------------
+# 5. Quantile Loss
+# -----------------------------
+def quantile_loss(preds, target, quantiles=[0.1,0.5,0.9]):
+    total_loss = 0
+    for i, q in enumerate(quantiles):
+        e = target - preds[:,:,:,i]
+        total_loss += torch.mean(torch.max(q*e, (q-1)*e))
+    return total_loss
+
+# -----------------------------
+# 6. Training Loop
+# -----------------------------
 EPOCHS = 50
 for epoch in range(EPOCHS):
-    optimizer.zero_grad()
-    output, attn_weights = model(X_tensor)
-    loss = criterion(output, y_tensor)
-    loss.backward()
-    optimizer.step()
-    if (epoch+1) % 10 == 0:
-        print(f"Epoch [{epoch+1}/{EPOCHS}], Loss: {loss.item():.4f}")
+    model.train()
+    epoch_loss = 0
+    for xb, yb in loader:
+        optimizer.zero_grad()
+        preds, _ = model(xb)
+        loss = quantile_loss(preds, yb.unsqueeze(-1), quantiles=quantiles)
+        loss.backward()
+        optimizer.step()
+        epoch_loss += loss.item()
+    print(f"Epoch {epoch+1}/{EPOCHS}, Loss: {epoch_loss/len(loader):.4f}")
 
-# Plot predictions
-preds, _ = model(X_tensor)
-preds = preds.detach().numpy()
-plt.plot(y_tensor.detach().numpy(), label='Actual')
-plt.plot(preds, label='Predicted')
+# -----------------------------
+# 7. Evaluation
+# -----------------------------
+model.eval()
+with torch.no_grad():
+    preds, _ = model(X_tensor)
+    crps = torch.mean(torch.abs(preds[:,:,:,1] - Y_tensor))
+    print("Approx CRPS:", crps.item())
+
+# -----------------------------
+# 8. Plot Predictions (Series 0)
+# -----------------------------
+preds_np = preds.detach().numpy()
+
+plt.figure(figsize=(12,6))
+plt.plot(Y[:,0], label="Actual")
+plt.plot(preds_np[:,0,0,1], label="Median Prediction")
+plt.fill_between(range(len(preds_np)),
+                 preds_np[:,0,0,0].flatten(),
+                 preds_np[:,0,0,2].flatten(),
+                 alpha=0.3, label="P10-P90 Range")
+plt.title("Probabilistic Forecast (Series 0)")
 plt.legend()
 plt.show()
