@@ -1,54 +1,77 @@
-# advanced-time-series-attention
-Deep Learning based Time Series Forecasting using Attention Mechanism
-# Advanced Time Series Forecasting with LSTM and Attention Mechanism
+# Advanced Probabilistic Time Series Forecasting with LSTM + Attention
 
-## Project Overview
-This project implements **time series forecasting** using deep learning with **LSTM** and an **Attention mechanism**. The model captures temporal dependencies and focuses on important time steps to improve prediction accuracy.
+## 📌 Project Overview
+This project implements **probabilistic forecasting** using **LSTM + Attention**.  
+Instead of predicting a single value, the model predicts three quantiles (P10, P50, P90), giving a **range of possible future values**.
 
-## Approach / Methodology
-1. **Data Preparation**
-   - Generate or load a time series.
-   - Normalize data using `MinMaxScaler`.
-   - Convert into sequences (`X`) and labels (`y`) for supervised learning.
+---
 
-2. **Model Architecture**
-   - **LSTM Layer:** Captures sequential patterns in the data.
-   - **Attention Layer:** Computes weighted importance of hidden states.
-   - **Fully Connected Layer:** Maps attention output to predictions.
+## 🧠 Approach / Methodology
+1. **Data Preparation**  
+   - 10 related synthetic time series generated  
+   - Normalized using MinMaxScaler  
+   - Converted to sliding window sequences
 
-3. **Training**
-   - Loss: Mean Squared Error (MSE)  
+2. **Model Architecture**  
+   - LSTM Layer: Captures temporal patterns  
+   - Attention Layer: Focuses on important time steps  
+   - Output Layer: Predicts multiple quantiles
+
+3. **Quantile Loss**  
+```python
+def quantile_loss(preds, target, quantiles=[0.1,0.5,0.9]):
+    total_loss = 0
+    for i, q in enumerate(quantiles):
+        e = target - preds[:,:,:,i]
+        total_loss += torch.mean(torch.max(q*e, (q-1)*e))
+    return total_loss
+```
+
+4. **Training**  
    - Optimizer: Adam  
-   - Number of epochs: 50  
+   - Epochs: 50  
+   - Batch size: 64  
 
-4. **Prediction & Evaluation**
-   - Forward pass through trained model.
-   - Plot actual vs predicted values to visualize performance.
+5. **Evaluation**  
+   - CRPS approximation  
+   - Visual: Actual vs median prediction + P10–P90 band
 
-## File Descriptions
+---
+
+## 📁 Files
 | File | Description |
 |------|-------------|
-| `model.py` | Contains the LSTM + Attention model implementation |
-| `train.py` | Data generation, training, evaluation, and plotting |
-| `requirements.txt` | List of libraries required to run the project |
-| `README.md` | Project overview and instructions |
+| `model.py` | LSTM + Attention + Probabilistic Quantile Network |
+| `train.py` | Training, evaluation, plotting |
+| `requirements.txt` | Required packages |
+| `README.md` | Project explanation & instructions |
 
-## Instructions to Run
-1. Clone the repository:
+---
+
+## 🚀 Instructions to Run
+1. Clone repo:  
 ```
-git clone https://github.com/<YourUsername>/advanced-time-series-attention.git
+git clone https://github.com/<YourUsername>/advanced-time-series-attention
 ```
-2. Install dependencies:
+2. Install dependencies:  
 ```
 pip install -r requirements.txt
 ```
-3. Run training:
+3. Run training & evaluation:  
 ```
 python train.py
 ```
-4. Visualize predictions: A plot will appear showing actual vs predicted values.
 
-## Additional Notes
-- The attention mechanism helps interpret which time steps the model focuses on.  
-- This setup can be extended to real-world datasets like stock prices, weather, or sales forecasting.  
-- Evaluation metrics can include **MSE**, **MAE**, or **RMSE**.
+---
+
+## 🔎 Interpretation
+- Outputs 3 quantiles: P10 (lower), P50 (median), P90 (upper)  
+- Probabilistic forecasting shows **uncertainty bounds**  
+- CRPS approx printed in console, plots show prediction bands
+
+---
+
+## 📌 GitHub Repository
+```
+https://github.com/<YourUsername>/advanced-time-series-attention
+```
