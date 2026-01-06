@@ -7,5 +7,5 @@ Test Loss (MSE): 0.0321
 Test MAE: 0.0184
 
 Observation:
-The attention mechanism helps the model focus on key timesteps, improving prediction accuracy.
-This setup with dropout and proper train-test evaluation ensures a more robust model.
+The attention mechanism allows the model to focus on important timesteps, 
+improving prediction accuracy. Dropout and train-test evaluation ensure robust performance.
