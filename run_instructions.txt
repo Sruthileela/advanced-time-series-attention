@@ -1,22 +1,13 @@
 # How to Run the Project
-
-1. Clone the repository:
-   git clone https://github.com/Sruthileela/advanced-time-series-attention.git
-
-2. Navigate to the project folder:
+1. Clone repository:
+   git clone https://github.com/YourUsername/advanced-time-series-attention.git
+2. Navigate to folder:
    cd advanced-time-series-attention
-
 3. Install dependencies:
    pip install -r requirements.txt
-
-4. Run the training script:
+4. Run training:
    python train.py
-
 5. Check results:
-   - results.txt → evaluation metrics (MSE, MAE)
-   - training_history.csv → epoch-wise training details
-   - lstm_attention_model.h5 → saved model
-
-6. Notes:
-   - Replace dummy X, y in train.py with real dataset for actual project
-   - Ensure correct TensorFlow version (2.14.0 recommended)
+   - results.txt
+   - training_history.csv
+   - lstm_attention_model.h5
