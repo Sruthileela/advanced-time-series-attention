@@ -64,3 +64,11 @@ python train.py
 ```
 - CRPS prints in console.
 - Plot shows median + P10–P90 bands.
+## How to Run
+1. Install required libraries using requirements.txt
+2. Execute train.py to train the model
+3. Review results in results.txt
+
+## Evaluation Metrics
+- RMSE
+- MAE
