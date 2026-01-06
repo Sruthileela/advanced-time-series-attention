@@ -1,3 +1,3 @@
-Dataset used: Time series dataset (stock prices or energy consumption)
+Dataset used: Sample time series dataset (200 samples, 10 timesteps)
 Source: https://www.kaggle.com/datasets
-Note: Dataset not uploaded due to size limits.
+Note: Dummy data is used for demonstration. Replace X, y in train.py with real dataset for actual project.
