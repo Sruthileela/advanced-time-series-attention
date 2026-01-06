@@ -1,7 +1,6 @@
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import LSTM, Dense, Input, Attention
 
-# Define LSTM with Attention model
 inputs = Input(shape=(10,1))
 lstm_out = LSTM(64, return_sequences=True)(inputs)
 attention = Attention()([lstm_out, lstm_out])
