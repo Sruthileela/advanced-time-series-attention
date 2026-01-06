@@ -1,3 +1,3 @@
 Dataset used: Sample time series dataset (200 samples, 10 timesteps)
 Source: https://www.kaggle.com/datasets
-Note: Dummy data is used for demonstration. Replace X, y in train.py with real dataset for actual project.
+Note: Replace X and y in train.py with real dataset for actual predictions.
