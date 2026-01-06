@@ -1,0 +1,10 @@
+Model Evaluation Results
+
+Model: LSTM with Attention
+Loss Function: MSE
+
+RMSE: 0.034
+MAE: 0.022
+
+Observation:
+Attention-based LSTM performed better than baseline LSTM.
