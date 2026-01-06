@@ -1,0 +1,8 @@
+Dataset Used:
+Time series dataset (stock prices / energy consumption)
+
+Source:
+https://www.kaggle.com/datasets
+
+Note:
+Dataset is not uploaded due to size limitations.
