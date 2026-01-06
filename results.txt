@@ -1,10 +1,10 @@
 Model Evaluation Results
 
 Model: LSTM with Attention
-Loss Function: MSE
+Loss Function: Mean Squared Error (MSE)
 
 RMSE: 0.034
 MAE: 0.022
 
 Observation:
-Attention-based LSTM performed better than baseline LSTM.
+The attention-based LSTM model performed better than a baseline LSTM model.
