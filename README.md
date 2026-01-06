@@ -1,23 +1,23 @@
-# Advanced Time Series Forecasting using LSTM with Attention
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import LSTM, Dense, Input, Attention, Flatten, Dropout
 
-## Overview
-This project implements a robust deep learning model for time series forecasting using LSTM with an Attention mechanism. The model captures temporal dependencies and identifies important timesteps, improving forecasting accuracy.
+# Input shape: 10 timesteps, 1 feature
+inputs = Input(shape=(10, 1))
 
-## Objectives
-- Build an LSTM-based time series forecasting model
-- Integrate attention mechanism for improved focus
-- Evaluate model using MSE and MAE
-- Save trained model and training history
+# LSTM layer with dropout
+lstm_out = LSTM(64, return_sequences=True)(inputs)
+lstm_out = Dropout(0.2)(lstm_out)
 
-## Project Files
-- `model.py` – LSTM + Attention model implementation
-- `train.py` – Training script with train-test split and evaluation
-- `dataset_link.txt` – Dataset reference
-- `results.txt` – Model evaluation results
-- `requirements.txt` – Dependencies
-- `Run_instructions.txt` – Step-by-step instructions to run project
+# Attention layer
+attention = Attention()([lstm_out, lstm_out])
+attention_flat = Flatten()(attention)
 
-## How to Run
-1. Clone the repository:
-```bash
-git clone https://github.com/Sruthileela/advanced-time-series-attention.git
+# Output layer
+output = Dense(1, activation='linear')(attention_flat)
+
+# Build and compile model
+model = Model(inputs=inputs, outputs=output)
+model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+
+# Print summary
+model.summary()
