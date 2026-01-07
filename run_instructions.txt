@@ -1,13 +1,17 @@
-# How to Run the Project
-1. Clone repository:
-   git clone https://github.com/YourUsername/advanced-time-series-attention.git
-2. Navigate to folder:
-   cd advanced-time-series-attention
-3. Install dependencies:
+1. Install Python 3.8 or above
+
+2. Install required libraries:
    pip install -r requirements.txt
-4. Run training:
+
+3. Place your dataset as data.csv
+   Required columns:
+   - Date
+   - Value
+
+4. Run the training script:
    python train.py
-5. Check results:
-   - results.txt
-   - training_history.csv
-   - lstm_attention_model.h5
+
+5. Output:
+   - Model training logs
+   - RMSE and MAE values
+   - Forecast visualization plot
