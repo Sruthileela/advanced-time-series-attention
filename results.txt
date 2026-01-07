@@ -1,4 +1,4 @@
-N-BEATS Forecast Results:
+0N-BEATS Forecast Results:
 ------------------------
 Training epochs: 50
 Batch size: 32
