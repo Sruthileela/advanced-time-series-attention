@@ -1,48 +1,45 @@
+
 import tensorflow as tf
-from tensorflow.keras.layers import Layer, LSTM, Dense, Dropout
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Model
 
-class Attention(Layer):
-    def __init__(self):
-        super(Attention, self).__init__()
 
-    def build(self, input_shape):
-        self.W = self.add_weight(
-            name="att_weight",
-            shape=(input_shape[-1], 1),
-            initializer="normal"
-        )
-        self.b = self.add_weight(
-            name="att_bias",
-            shape=(input_shape[1], 1),
-            initializer="zeros"
-        )
-        super(Attention, self).build(input_shape)
+class NBeatsBlock(tf.keras.layers.Layer):
+    def __init__(self, units, theta_dim, backcast_length, forecast_length):
+        super().__init__()
+        self.fc1 = Dense(units, activation="relu")
+        self.fc2 = Dense(units, activation="relu")
+        self.theta = Dense(theta_dim)
+
+        self.backcast_length = backcast_length
+        self.forecast_length = forecast_length
 
     def call(self, x):
-        e = tf.keras.backend.tanh(
-            tf.keras.backend.dot(x, self.W) + self.b
-        )
-        a = tf.keras.backend.softmax(e, axis=1)
-        output = x * a
-        return tf.keras.backend.sum(output, axis=1)
+        x = self.fc1(x)
+        x = self.fc2(x)
+        theta = self.theta(x)
+
+        backcast = theta[:, :self.backcast_length]
+        forecast = theta[:, self.backcast_length:]
+
+        return backcast, forecast
 
 
-def build_model(input_shape):
-    model = tf.keras.Sequential([
-        LSTM(64, return_sequences=True, input_shape=input_shape),
-        Dropout(0.2),
+def build_nbeats(input_size, units=256, stacks=3):
+    forecast_length = 1
+    backcast_length = input_size
+    theta_dim = backcast_length + forecast_length
 
-        LSTM(64, return_sequences=True),
-        Dropout(0.2),
+    inputs = tf.keras.Input(shape=(input_size,))
+    residual = inputs
+    forecast = tf.zeros_like(inputs[:, :forecast_length])
 
-        Attention(),
-        Dense(32, activation='relu'),
-        Dense(1)
-    ])
+    for _ in range(stacks):
+        block = NBeatsBlock(units, theta_dim, backcast_length, forecast_length)
+        backcast, block_forecast = block(residual)
+        residual = residual - backcast
+        forecast = forecast + block_forecast
 
-    model.compile(
-        optimizer='adam',
-        loss='mse'
-    )
-
+    model = Model(inputs, forecast)
+    model.compile(optimizer="adam", loss="mse")
     return model
