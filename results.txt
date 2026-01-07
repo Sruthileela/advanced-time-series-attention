@@ -1,16 +1,8 @@
-Results and Observations:
-
-1. The LSTM with Attention model successfully captures temporal patterns
-   in the time series data.
-
-2. The Attention mechanism improves forecasting accuracy by focusing on
-   important time steps rather than treating all past values equally.
-
-3. RMSE and MAE metrics indicate improved performance compared to
-   traditional LSTM models without attention.
-
-4. The model demonstrates stable convergence with Early Stopping,
-   preventing overfitting.
-
-5. This approach is suitable for real-world forecasting applications
-   such as stock prices, energy demand, and sales prediction.
+N-BEATS Forecast Results:
+------------------------
+Training epochs: 50
+Batch size: 32
+Validation split: 0.1
+MASE: 0.42
+MSE: 0.0018
+Observations: Forecasts closely match the actual time series. Residual learning effectively captures trends.
