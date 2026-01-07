@@ -1,17 +1,9 @@
-1. Install Python 3.8 or above
+1. Install required libraries:
+   pip install tensorflow pandas numpy scikit-learn matplotlib
 
-2. Install required libraries:
-   pip install -r requirements.txt
+2. Ensure dataset CSV is placed in the project root folder.
 
-3. Place your dataset as data.csv
-   Required columns:
-   - Date
-   - Value
-
-4. Run the training script:
+3. Run the training script:
    python train.py
 
-5. Output:
-   - Model training logs
-   - RMSE and MAE values
-   - Forecast visualization plot
+4. Results and forecast plots will be generated automatically.
