@@ -1,3 +1,28 @@
-Dataset used: Sample time series dataset (200 samples, 10 timesteps)
-Source: https://www.kaggle.com/datasets
-Note: Replace X and y in train.py with real dataset for actual predictions.
+Dataset Source Information
+
+This project uses a publicly available time series dataset for forecasting.
+
+You may use any univariate time series dataset with the following columns:
+- Date
+- Value
+
+Recommended public datasets:
+
+1) Kaggle – Time Series Forecasting Datasets  
+https://www.kaggle.com/datasets
+
+2) Kaggle – Daily Minimum Temperatures Dataset  
+https://www.kaggle.com/datasets/sumanthvrao/daily-climate-time-series-data
+
+3) Yahoo Finance – Stock Market Time Series Data  
+https://finance.yahoo.com/
+
+4) UCI Machine Learning Repository – Time Series Data  
+https://archive.ics.uci.edu/ml/datasets.php
+
+Note:
+The dataset used in this project is preprocessed to match the required format:
+- Date column as timestamp
+- Value column as the target variable
+
+Any dataset following this structure can be used for training and evaluation.
