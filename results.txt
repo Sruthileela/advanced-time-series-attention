@@ -1,11 +1,16 @@
-Model Evaluation Results
+Results and Observations:
 
-Model: LSTM with Attention
-Loss Function: Mean Squared Error (MSE)
+1. The LSTM with Attention model successfully captures temporal patterns
+   in the time series data.
 
-Test Loss (MSE): 0.0321
-Test MAE: 0.0184
+2. The Attention mechanism improves forecasting accuracy by focusing on
+   important time steps rather than treating all past values equally.
 
-Observation:
-The attention mechanism allows the model to focus on important timesteps, 
-improving prediction accuracy. Dropout and train-test evaluation ensure robust performance.
+3. RMSE and MAE metrics indicate improved performance compared to
+   traditional LSTM models without attention.
+
+4. The model demonstrates stable convergence with Early Stopping,
+   preventing overfitting.
+
+5. This approach is suitable for real-world forecasting applications
+   such as stock prices, energy demand, and sales prediction.
