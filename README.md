@@ -1,34 +1,79 @@
-# Advanced Time Series Forecasting using LSTM with Attention
+# 📈 Advanced Time Series Forecasting using LSTM with Attention
 
-## Overview
-This project implements a robust deep learning model for time series forecasting using **LSTM (Long Short-Term Memory)** enhanced with an **Attention mechanism**. The attention layer allows the model to focus on **important timesteps**, improving prediction accuracy and interpretability. The project is suitable for sequential data tasks like stock price prediction, weather forecasting, or sensor data analysis.
+## 📌 Overview
+This project presents an advanced deep learning solution for time series forecasting using **Long Short-Term Memory (LSTM)** networks combined with an **Attention Mechanism**. The attention layer enables the model to focus on the most relevant historical time steps, significantly improving prediction accuracy and interpretability over traditional LSTM models.
 
-## Objectives
-- Build a robust LSTM-based model for sequence prediction
-- Integrate attention mechanism to highlight key timesteps
-- Evaluate model performance using **MSE** and **MAE**
-- Provide a reproducible and professional project structure
+The project is implemented with clean, modular code and follows industry and academic best practices, making it suitable for evaluations, internships, and real-world forecasting use cases.
 
-## Key Features
-- **LSTM Architecture:** Captures temporal patterns in sequential data  
-- **Attention Mechanism:** Highlights key timesteps for better predictions  
-- **Dropout Layers:** Prevent overfitting and improve generalization  
-- **Train-Test Split:** Ensures reliable model evaluation  
+---
 
-## Evaluation Metrics
-- **Mean Squared Error (MSE):** Measures overall prediction error  
-- **Mean Absolute Error (MAE):** Measures average absolute error  
+## 🎯 Objectives
+- Develop a robust LSTM-based time series forecasting model  
+- Improve forecasting accuracy using an Attention mechanism  
+- Enhance interpretability by identifying important time steps  
+- Evaluate model performance using standard regression metrics  
+- Provide a reproducible and well-structured implementation  
 
-## Project Files
-- `model.py` – LSTM + Attention implementation  
-- `train.py` – Training script with evaluation and results generation  
-- `results.txt` – Model performance metrics and observations  
-- `dataset_link.txt` – Dataset reference or URL  
-- `README.md` – Project overview and instructions  
-- `requirements.txt` – Dependencies for running the project  
-- `Run_instructions.txt` – Step-by-step instructions to run the project  
+---
 
-## How to Run
-1. Clone the repository:
+## 📂 Project Structure
+advanced-time-series-attention/ ├── README.md ├── model.py ├── train.py ├── requirements.txt ├── run_instructions.txt ├── results.txt ├── dataset_link.txt └── data.csv
+---
+
+## 📊 Dataset Description
+- The dataset contains sequential time series data  
+- Required columns:
+  - `Date` – Time index
+  - `Value` – Target variable  
+- Data is normalized using **Min-Max Scaling** before training  
+
+> Any univariate time series dataset with the same format can be used.
+
+---
+
+## 🧠 Model Architecture
+The model consists of:
+- Stacked **LSTM layers** for learning temporal dependencies  
+- **Dropout layers** to reduce overfitting  
+- A **custom Attention layer** to prioritize important time steps  
+- **Dense layers** for final prediction  
+
+### 🔹 Attention Mechanism
+Traditional LSTMs treat all past values equally. The Attention mechanism allows the model to dynamically focus on significant time steps, improving both accuracy and interpretability.
+
+---
+
+## ⚙️ Methodology
+1. Load and preprocess the dataset  
+2. Normalize data using MinMaxScaler  
+3. Create fixed-length time sequences  
+4. Train the LSTM with Attention model  
+5. Apply Early Stopping to prevent overfitting  
+6. Evaluate performance using error metrics  
+7. Visualize actual vs predicted values  
+
+---
+
+## 📐 Evaluation Metrics
+The model performance is measured using:
+- **RMSE (Root Mean Squared Error)**  
+- **MAE (Mean Absolute Error)**  
+
+These metrics provide a reliable assessment of forecasting accuracy.
+
+---
+
+## 📈 Results
+- The Attention-based LSTM model achieves improved forecasting accuracy  
+- Stable training convergence is observed with Early Stopping  
+- Forecast plots show strong alignment between actual and predicted values  
+- Attention enhances the model’s learning capability and interpretability  
+
+Detailed observations are available in `results.txt`.
+
+---
+
+## ▶️ How to Run the Project
+1. Install dependencies:
 ```bash
-git clone https://github.com/YourUsername/advanced-time-series-attention.git
+pip install -r requirements.txt
