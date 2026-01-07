@@ -1,23 +1,48 @@
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import LSTM, Dense, Input, Attention, Flatten, Dropout
+import tensorflow as tf
+from tensorflow.keras.layers import Layer, LSTM, Dense, Dropout
 
-# Input shape: 10 timesteps, 1 feature
-inputs = Input(shape=(10, 1))
+class Attention(Layer):
+    def __init__(self):
+        super(Attention, self).__init__()
 
-# LSTM layer with dropout
-lstm_out = LSTM(64, return_sequences=True)(inputs)
-lstm_out = Dropout(0.2)(lstm_out)
+    def build(self, input_shape):
+        self.W = self.add_weight(
+            name="att_weight",
+            shape=(input_shape[-1], 1),
+            initializer="normal"
+        )
+        self.b = self.add_weight(
+            name="att_bias",
+            shape=(input_shape[1], 1),
+            initializer="zeros"
+        )
+        super(Attention, self).build(input_shape)
 
-# Attention layer
-attention = Attention()([lstm_out, lstm_out])
-attention_flat = Flatten()(attention)
+    def call(self, x):
+        e = tf.keras.backend.tanh(
+            tf.keras.backend.dot(x, self.W) + self.b
+        )
+        a = tf.keras.backend.softmax(e, axis=1)
+        output = x * a
+        return tf.keras.backend.sum(output, axis=1)
 
-# Output layer
-output = Dense(1, activation='linear')(attention_flat)
 
-# Build and compile model
-model = Model(inputs=inputs, outputs=output)
-model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+def build_model(input_shape):
+    model = tf.keras.Sequential([
+        LSTM(64, return_sequences=True, input_shape=input_shape),
+        Dropout(0.2),
 
-# Print summary
-model.summary()
+        LSTM(64, return_sequences=True),
+        Dropout(0.2),
+
+        Attention(),
+        Dense(32, activation='relu'),
+        Dense(1)
+    ])
+
+    model.compile(
+        optimizer='adam',
+        loss='mse'
+    )
+
+    return model
