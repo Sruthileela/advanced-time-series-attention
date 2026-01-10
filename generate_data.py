@@ -3,13 +3,20 @@ import pandas as pd
 
 np.random.seed(42)
 
-n = 1500  # exceeds Cultus requirement
-time = np.arange(n)
+n_rows = 1500
+time = np.arange(n_rows)
 
-target = 50 + 10 * np.sin(2 * np.pi * time / 24) + np.random.normal(0, 2, n)
-feature_1 = target + np.random.normal(0, 1, n)
-feature_2 = 20 + 5 * np.cos(2 * np.pi * time / 168)
-feature_3 = np.random.uniform(0.3, 0.9, n)
+# Generate seasonal + trend data
+target = (
+    0.05 * time +
+    10 * np.sin(2 * np.pi * time / 24) +
+    5 * np.sin(2 * np.pi * time / 168) +
+    np.random.normal(0, 1, n_rows)
+)
+
+feature_1 = target + np.random.normal(0, 0.5, n_rows)
+feature_2 = np.cos(2 * np.pi * time / 24) + np.random.normal(0, 0.2, n_rows)
+feature_3 = np.random.normal(0, 1, n_rows)
 
 df = pd.DataFrame({
     "target": target,
@@ -19,4 +26,4 @@ df = pd.DataFrame({
 })
 
 df.to_csv("data.csv", index=False)
-print("Generated data.csv with", n, "rows")
+print("data.csv generated with", len(df), "rows")
