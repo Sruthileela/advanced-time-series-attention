@@ -1,12 +1,14 @@
-Project Execution Instructions:
+Project Execution Instructions
 
-1. Ensure Python version 3.8 or above is installed
-2. Clone or download the project repository
-3. Navigate to the project directory
-4. Install required dependencies using:
+1. Install required dependencies:
    pip install -r requirements.txt
-5. Ensure data.csv is present in the root directory
-6. Run the training and evaluation script:
+
+2. (Optional) Generate dataset:
+   python generate_data.py
+
+3. Train and evaluate the model:
    python train.py
-7. View RMSE and MAE results in the terminal
-8. SHAP explainability plot will be displayed automatically
+
+4. Output:
+   - RMSE and MAE metrics for Transformer
+   - RMSE and MAE metrics for SARIMAX baseline
