@@ -80,6 +80,15 @@ mae = mean_absolute_error(y_test_inv, preds_inv)
 print("Transformer RMSE:", rmse)
 print("Transformer MAE:", mae)
 
+# ===== Directional Accuracy =====
+def directional_accuracy(y_true, y_pred):
+    return np.mean(
+        np.sign(np.diff(y_true)) == np.sign(np.diff(y_pred))
+    )
+
+da = directional_accuracy(y_test_inv, preds_inv)
+print("Transformer Directional Accuracy:", da)
+
 # ===== BASELINE: SARIMAX =====
 sarimax_model = SARIMAX(
     df[target_col][:train_size],
