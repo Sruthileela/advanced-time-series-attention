@@ -1,59 +1,26 @@
 # Advanced Time Series Forecasting with Deep Learning and Explainability
 
 ## Project Overview
-This project implements an advanced deep learning approach for multivariate time-series forecasting using a Transformer-based neural network. The objective is to accurately predict future values from historical time-series data while maintaining interpretability through explainable AI techniques.
-
-Traditional statistical models such as ARIMA struggle with non-linearity and long-term dependencies. To overcome these limitations, this project uses a Transformer architecture combined with SHAP explainability to analyze feature importance over time.
-
----
-
-## Key Features
-- Multivariate time-series forecasting
-- Transformer-based deep learning model
-- Sliding window sequence generation
-- Robust preprocessing and normalization
-- Model evaluation using RMSE and MAE
-- Explainability using SHAP (SHapley Additive Explanations)
-
----
+This project implements an advanced multivariate time-series forecasting system using a Transformer-based deep learning model. The objective is to accurately forecast future values while providing interpretability through SHAP explainability.
 
 ## Model Architecture
-- Input embedding layer
-- Multi-head self-attention Transformer encoder
-- Fully connected output layer
-- Optimized using Adam optimizer and MSE loss
-
----
+- Transformer Encoder
+- Multi-head Self Attention
+- Sliding window sequence modeling
 
 ## Dataset
-- Input: `data.csv`
-- Multivariate numerical time-series dataset
-- Scaled using Min-Max normalization
-- Train-test split: 80% training, 20% testing
-
----
+- Multivariate time-series dataset
+- Normalized using MinMaxScaler
+- 80% training, 20% testing split
 
 ## Evaluation Metrics
-The model performance is evaluated using:
-- **RMSE (Root Mean Squared Error)**
-- **MAE (Mean Absolute Error)**
-
-These metrics provide insight into forecasting accuracy and robustness.
-
----
+- Root Mean Squared Error (RMSE)
+- Mean Absolute Error (MAE)
 
 ## Explainability
-To address the black-box nature of deep learning models, SHAP is used to:
-- Quantify feature importance
-- Explain model predictions over time
-- Improve transparency and interpretability
+SHAP (SHapley Additive Explanations) is used to interpret feature contributions to model predictions over time.
 
-SHAP summary plots visualize how each feature contributes to predictions.
-
----
-
-## Installation
-Install dependencies using:
-
+## How to Run
 ```bash
 pip install -r requirements.txt
+python train.py
