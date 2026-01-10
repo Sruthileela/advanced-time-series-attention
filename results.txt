@@ -1,22 +1,6 @@
-Model: Transformer-Based Time Series Forecasting Model
+The dataset used in this project is synthetically generated to ensure sufficient size and controlled temporal patterns.
+A total of 1500 observations were created using sinusoidal functions to represent daily and weekly seasonality,
+combined with Gaussian noise to simulate real-world variability.
 
-Evaluation Metrics:
--------------------
-RMSE: 0.038
-MAE:  0.026
-
-Observations:
--------------
-1. The Transformer model effectively captures long-term temporal
-   dependencies using self-attention mechanisms.
-2. The model shows stable convergence and low prediction error.
-3. SHAP explainability highlights the most influential features
-   contributing to forecast decisions.
-4. Performance is superior to traditional statistical models
-   such as ARIMA for nonlinear time-series patterns.
-
-Conclusion:
------------
-The results demonstrate that deep learning with attention mechanisms
-provides accurate and interpretable forecasts suitable for real-world
-applications.
+This approach ensures compliance with dataset size requirements while allowing clear evaluation of the
+Transformer model's ability to learn long-term dependencies in multivariate time-series data.
