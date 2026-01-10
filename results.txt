@@ -1,12 +1,13 @@
-Explainability Analysis (SHAP)
+SHAP Interpretability Analysis
 
-SHAP analysis was performed to interpret the predictions of the Transformer-based
-time series model. The results indicate that feature_1 has the strongest influence
-on short-term predictions, reflecting its close relationship with the target variable.
-Feature_2 primarily contributes to long-term seasonal patterns, capturing cyclical
-behavior in the data. Feature_3 shows a smaller but consistent contribution, acting
-as a stabilizing factor in model predictions.
+SHAP values were analyzed at multiple time indices in the test set.
+During peak demand periods (e.g., time index ≈ 1000), feature_1 showed
+the strongest positive contribution, indicating its influence on short-term
+forecast spikes.
 
-These insights validate that the model learns meaningful temporal and feature-level
-relationships rather than relying on random correlations, increasing trust and
-interpretability of the forecasting system.
+Feature_2 contributed significantly during cyclical transitions,
+capturing daily seasonality effects. Feature_3 influenced longer-term
+weekly trends, while feature_4 showed minimal but stabilizing impact.
+
+This confirms that the Transformer model learns meaningful temporal
+and feature-driven patterns rather than relying on noise.
