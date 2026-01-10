@@ -69,3 +69,11 @@ Why Transformer?
 Handles long-term dependencies better than RNNs/LSTMs
 
 Avoids van
+
+Hyperparameter tuning was performed using manual grid exploration.
+Key parameters such as learning rate, sequence length, number of
+attention heads, and model dimension were evaluated.
+
+The final configuration (learning rate = 0.001, sequence length = 24,
+model dimension = 64, attention heads = 4) provided the best balance
+between convergence speed and validation performance.
