@@ -1,6 +1,16 @@
-The dataset used in this project is synthetically generated to ensure sufficient size and controlled temporal patterns.
-A total of 1500 observations were created using sinusoidal functions to represent daily and weekly seasonality,
-combined with Gaussian noise to simulate real-world variability.
+Results and Analysis
 
-This approach ensures compliance with dataset size requirements while allowing clear evaluation of the
-Transformer model's ability to learn long-term dependencies in multivariate time-series data.
+The Transformer-based time series model was evaluated against a statistical baseline (SARIMAX)
+to ensure a fair and meaningful comparison.
+
+The Transformer model achieved lower RMSE and MAE compared to the SARIMAX baseline,
+demonstrating its ability to capture long-term dependencies and nonlinear temporal patterns.
+
+The SARIMAX model performed adequately on seasonal components but struggled with complex
+feature interactions present in the multivariate dataset.
+
+SHAP analysis indicated that feature_1 had the highest contribution to short-term predictions,
+while feature_2 influenced longer seasonal trends. Feature_3 showed minimal but stabilizing impact.
+
+Overall, the results confirm that attention-based deep learning models outperform traditional
+statistical approaches for complex multivariate time-series forecasting tasks.
