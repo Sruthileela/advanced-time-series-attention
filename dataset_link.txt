@@ -1,13 +1,2 @@
-Dataset Source:
-
-The dataset used in this project is a multivariate time-series dataset
-suitable for forecasting tasks. It represents continuous numerical
-measurements over time.
-
-Public Dataset Reference:
-https://www.kaggle.com/datasets/robikscube/hourly-energy-consumption
-
-Note:
-- Dataset was adapted for educational and experimental purposes
-- Target variable is placed as the first column
-- All features are numerical and ordered chronologically
+Dataset generated synthetically to simulate multivariate time-series data with clear seasonality and trend patterns.
+The data generation process is implemented in generate_data.py using sinusoidal functions and controlled noise.
