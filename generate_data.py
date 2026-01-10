@@ -3,12 +3,12 @@ import pandas as pd
 
 np.random.seed(42)
 
-n = 2000
+n = 1500  # exceeds Cultus requirement
 time = np.arange(n)
 
-target = 50 + 10*np.sin(2*np.pi*time/24) + np.random.normal(0, 2, n)
+target = 50 + 10 * np.sin(2 * np.pi * time / 24) + np.random.normal(0, 2, n)
 feature_1 = target + np.random.normal(0, 1, n)
-feature_2 = 20 + 5*np.cos(2*np.pi*time/168)
+feature_2 = 20 + 5 * np.cos(2 * np.pi * time / 168)
 feature_3 = np.random.uniform(0.3, 0.9, n)
 
 df = pd.DataFrame({
@@ -19,4 +19,4 @@ df = pd.DataFrame({
 })
 
 df.to_csv("data.csv", index=False)
-print("data.csv generated with", len(df), "rows")
+print("Generated data.csv with", n, "rows")
