@@ -1,2 +1,7 @@
-Dataset generated synthetically to simulate multivariate time-series data with clear seasonality and trend patterns.
-The data generation process is implemented in generate_data.py using sinusoidal functions and controlled noise.
+The dataset used in this project is synthetically generated to simulate real-world multivariate
+time-series data with clear daily and weekly seasonality patterns.
+
+A total of 1500+ observations are generated using sinusoidal functions combined with controlled
+Gaussian noise to ensure sufficient size and realistic variability.
+
+The dataset generation process is fully reproducible and implemented in generate_data.py.
