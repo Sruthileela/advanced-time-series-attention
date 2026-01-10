@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-class TransformerTimeSeries(nn.Module):
+class TimeSeriesTransformer(nn.Module):
     def __init__(self, input_dim, d_model=64, nhead=4, num_layers=2):
         super().__init__()
 
