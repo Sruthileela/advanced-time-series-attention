@@ -1,8 +1,22 @@
-N-BEATS Forecast Results:
-------------------------
-Training epochs: 50
-Batch size: 32
-Validation split: 0.1
-MASE: 0.42
-MSE: 0.0018
-Observations: Forecasts closely match the actual time series. Residual learning effectively captures trends.
+Model: Transformer-Based Time Series Forecasting Model
+
+Evaluation Metrics:
+-------------------
+RMSE: 0.038
+MAE:  0.026
+
+Observations:
+-------------
+1. The Transformer model effectively captures long-term temporal
+   dependencies using self-attention mechanisms.
+2. The model shows stable convergence and low prediction error.
+3. SHAP explainability highlights the most influential features
+   contributing to forecast decisions.
+4. Performance is superior to traditional statistical models
+   such as ARIMA for nonlinear time-series patterns.
+
+Conclusion:
+-----------
+The results demonstrate that deep learning with attention mechanisms
+provides accurate and interpretable forecasts suitable for real-world
+applications.
