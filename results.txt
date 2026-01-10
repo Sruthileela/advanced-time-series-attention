@@ -1,16 +1,12 @@
-Results and Analysis
+Explainability Analysis (SHAP)
 
-The Transformer-based time series model was evaluated against a statistical baseline (SARIMAX)
-to ensure a fair and meaningful comparison.
+SHAP analysis was performed to interpret the predictions of the Transformer-based
+time series model. The results indicate that feature_1 has the strongest influence
+on short-term predictions, reflecting its close relationship with the target variable.
+Feature_2 primarily contributes to long-term seasonal patterns, capturing cyclical
+behavior in the data. Feature_3 shows a smaller but consistent contribution, acting
+as a stabilizing factor in model predictions.
 
-The Transformer model achieved lower RMSE and MAE compared to the SARIMAX baseline,
-demonstrating its ability to capture long-term dependencies and nonlinear temporal patterns.
-
-The SARIMAX model performed adequately on seasonal components but struggled with complex
-feature interactions present in the multivariate dataset.
-
-SHAP analysis indicated that feature_1 had the highest contribution to short-term predictions,
-while feature_2 influenced longer seasonal trends. Feature_3 showed minimal but stabilizing impact.
-
-Overall, the results confirm that attention-based deep learning models outperform traditional
-statistical approaches for complex multivariate time-series forecasting tasks.
+These insights validate that the model learns meaningful temporal and feature-level
+relationships rather than relying on random correlations, increasing trust and
+interpretability of the forecasting system.
