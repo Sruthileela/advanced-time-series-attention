@@ -1,72 +1,131 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
 from sklearn.preprocessing import MinMaxScaler
-from model import build_nbeats
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+import shap
+import matplotlib.pyplot as plt
 
+# ----------------------------
+# Configuration
+# ----------------------------
+SEQ_LEN = 24
+BATCH_SIZE = 32
+EPOCHS = 20
+LR = 0.001
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-def create_supervised(data, window=30):
-    X, y = [], []
-    for i in range(len(data) - window):
-        X.append(data[i:i + window])
-        y.append(data[i + window])
-    return np.array(X), np.array(y)
+# ----------------------------
+# Dataset
+# ----------------------------
+class TimeSeriesDataset(Dataset):
+    def __init__(self, data, seq_len):
+        self.data = data
+        self.seq_len = seq_len
 
+    def __len__(self):
+        return len(self.data) - self.seq_len
 
-def mase(y_true, y_pred, y_train):
-    naive_forecast = np.mean(np.abs(y_train[1:] - y_train[:-1]))
-    return np.mean(np.abs(y_true - y_pred)) / naive_forecast
+    def __getitem__(self, idx):
+        x = self.data[idx:idx+self.seq_len]
+        y = self.data[idx+self.seq_len, 0]
+        return torch.tensor(x, dtype=torch.float32), torch.tensor(y, dtype=torch.float32)
 
+# ----------------------------
+# Transformer Model
+# ----------------------------
+class TransformerModel(nn.Module):
+    def __init__(self, input_dim, d_model=64, nhead=4, num_layers=2):
+        super().__init__()
+        self.embedding = nn.Linear(input_dim, d_model)
+        encoder_layer = nn.TransformerEncoderLayer(
+            d_model=d_model,
+            nhead=nhead,
+            batch_first=True
+        )
+        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers)
+        self.fc = nn.Linear(d_model, 1)
 
-# Load dataset
+    def forward(self, x):
+        x = self.embedding(x)
+        x = self.transformer(x)
+        return self.fc(x[:, -1, :]).squeeze()
+
+# ----------------------------
+# Load & Preprocess Data
+# ----------------------------
 df = pd.read_csv("data.csv")
-df["Date"] = pd.to_datetime(df["Date"])
-df.set_index("Date", inplace=True)
 
-values = df["Value"].values.reshape(-1, 1)
-
-# Scaling
 scaler = MinMaxScaler()
-scaled = scaler.fit_transform(values)
+scaled_data = scaler.fit_transform(df.values)
 
-# Prepare data
-WINDOW = 30
-X, y = create_supervised(scaled, WINDOW)
+train_size = int(0.8 * len(scaled_data))
+train_data = scaled_data[:train_size]
+test_data = scaled_data[train_size:]
 
-split = int(0.8 * len(X))
-X_train, X_test = X[:split], X[split:]
-y_train, y_test = y[:split], y[split:]
+train_ds = TimeSeriesDataset(train_data, SEQ_LEN)
+test_ds = TimeSeriesDataset(test_data, SEQ_LEN)
 
-X_train = X_train.reshape(X_train.shape[0], WINDOW)
-X_test = X_test.reshape(X_test.shape[0], WINDOW)
+train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True)
+test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE)
 
-# Model
-model = build_nbeats(WINDOW)
-model.summary()
+# ----------------------------
+# Initialize Model
+# ----------------------------
+model = TransformerModel(input_dim=df.shape[1]).to(DEVICE)
+optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+criterion = nn.MSELoss()
 
-# Train
-history = model.fit(
-    X_train, y_train,
-    epochs=50,
-    batch_size=32,
-    validation_split=0.1,
-    verbose=1
+# ----------------------------
+# Training Loop
+# ----------------------------
+for epoch in range(EPOCHS):
+    model.train()
+    losses = []
+
+    for x, y in train_loader:
+        x, y = x.to(DEVICE), y.to(DEVICE)
+        optimizer.zero_grad()
+        preds = model(x)
+        loss = criterion(preds, y)
+        loss.backward()
+        optimizer.step()
+        losses.append(loss.item())
+
+    print(f"Epoch {epoch+1}/{EPOCHS} - Loss: {np.mean(losses):.4f}")
+
+# ----------------------------
+# Evaluation
+# ----------------------------
+model.eval()
+preds, actuals = [], []
+
+with torch.no_grad():
+    for x, y in test_loader:
+        x = x.to(DEVICE)
+        output = model(x).cpu().numpy()
+        preds.extend(output)
+        actuals.extend(y.numpy())
+
+rmse = np.sqrt(mean_squared_error(actuals, preds))
+mae = mean_absolute_error(actuals, preds)
+
+print(f"RMSE: {rmse:.4f}")
+print(f"MAE: {mae:.4f}")
+
+# ----------------------------
+# Explainability (SHAP)
+# ----------------------------
+background = torch.tensor(train_data[:100], dtype=torch.float32).to(DEVICE)
+test_samples = torch.tensor(test_data[:50], dtype=torch.float32).to(DEVICE)
+
+explainer = shap.DeepExplainer(model, background)
+shap_values = explainer.shap_values(test_samples)
+
+shap.summary_plot(
+    shap_values,
+    test_samples.cpu().numpy(),
+    feature_names=df.columns
 )
-
-# Predict
-y_pred = model.predict(X_test)
-
-y_pred_inv = scaler.inverse_transform(y_pred)
-y_test_inv = scaler.inverse_transform(y_test)
-
-# Metrics
-mase_value = mase(y_test_inv, y_pred_inv, y_train)
-print("MASE:", mase_value)
-
-# Plot
-plt.figure(figsize=(10,5))
-plt.plot(y_test_inv, label="Actual")
-plt.plot(y_pred_inv, label="Forecast")
-plt.legend()
-plt.title("N-BEATS Forecast")
-plt.show()
