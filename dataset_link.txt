@@ -1,7 +1,27 @@
-The dataset used in this project is synthetically generated to simulate real-world multivariate
-time-series data with clear daily and weekly seasonality patterns.
+# Dataset Information
+## Primary Dataset
+Beijing Multi-Site Air-Quality Dataset
+- Source: UCI Machine Learning Repository
+- Link: https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data
+- Description: Hourly air quality data from 12 stations in Beijing (2013-2017)
+- Features: PM2.5, PM10, SO2, NO2, CO, O3, temperature, pressure, dew point, etc.
+- Size: ~420,000 records, 18 features per station
 
-A total of 1500+ observations are generated using sinusoidal functions combined with controlled
-Gaussian noise to ensure sufficient size and realistic variability.
+## Alternative Datasets
+1. Electricity Load Forecasting:
+   - https://archive.ics.uci.edu/ml/datasets/ElectricityLoadDiagrams20112014
 
-The dataset generation process is fully reproducible and implemented in generate_data.py.
+2. NASDAQ Stock Data:
+   - https://www.kaggle.com/datasets/paultimothymooney/stock-market-data
+
+3. Synthetic Data Generator:
+   - Use generate_data.py for custom time series patterns
+
+## Data Preparation
+1. Download data.csv from UCI link
+2. Place in data/raw/ folder
+3. Ensure file is named 'air_quality.csv' or update config.yaml
+4. Run preprocessing: python -c "from src.data_preprocessing import load_and_preprocess; df = load_and_preprocess('data/raw/air_quality.csv')"
+
+## License
+Dataset is publicly available for research purposes.
